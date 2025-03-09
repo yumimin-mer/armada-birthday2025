@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="ja">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Armada Happy Birthday 2025 By AAC</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #000;
+        }
+
+        /* ページロード時の黒レイヤー */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 1s ease-out;
+        }
+
+        #startButton {
+            padding: 15px 30px;
+            font-size: 24px;
+            background-color: #ffcc00;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #startButton:hover {
+            background-color: #ffaa00;
+        }
+
+        /* 背景 */
+        #container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1792px;
+            height: 1024px;
+            background: url("image.jpg") no-repeat;
+            opacity: 0;
+            animation: fadeIn 3s ease-in-out forwards;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* クリック時に表示するブロック */
+        .block {
+            display: none;
+            position: absolute;
+            width: 128px;
+            height: 90px;
+            background-color: rgba(0, 0, 0, 0.7);
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+
+        .block img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* デバッグ用のクリックエリア */
+        /* デバッグ用のクリックエリア (カーソルポインタ表示) */
+        .debug-area {
+            position: absolute;
+            width: 128px;
+            height: 90px;
+            pointer-events: all; /* ポインタイベントを有効化 */
+            background-color: rgb(0 0 0 / 0.5);
+            color: #fff;
+            font-weight: bold;
+            padding-top: 20px;
+            text-align: center;
+            box-sizing: border-box;
+            cursor: pointer; /* ポインタカーソルを表示 */
+            /*border: 1px solid red;  */
+        }
+        .block:hover{
+            cursor: pointer; /* ポインタカーソルを表示 */
+        }
+
+
+
+        /* ボタン共通 */
+        .control-button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            color: white;
+        }
+
+        #playbgm { background-color: green; }
+        #playbgm:hover { background-color: darkgreen; }
+        #stopbgm { background-color: red; }
+        #stopbgm:hover { background-color: darkred; }
+        #showAllButton { background-color: blue; }
+        #showAllButton:hover { background-color: darkblue; }
+        #resetButton { background-color: gray; }
+        #resetButton:hover { background-color: darkgray; }
+
+        #overlay > div {
+            color: #fff;
+            margin: 30px;
+        }
+        #overlay .title {
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ページロード時の黒レイヤー -->
+    <div id="overlay">
+        <div class="title">アルマダさんとひとつ屋根の下のなかまたち</div>
+        <div>このページは音楽が流れます<br>音量に気を付けてください</div>
+        <button id="startButton">どんな住人が出てくるかな～ ⇒ Start</button>
+    </div>
+
+    <div id="container">
+        <div>
+            <button id="playbgm" class="control-button" disabled>BGM ON</button>
+            <button id="stopbgm" class="control-button" disabled>BGM OFF</button>
+            <button id="showAllButton" class="control-button">すべて表示</button>
+            <button id="resetButton" class="control-button">最初に戻る</button>
+        </div>
+    </div>
+
+    <script>
+        const clickAreas = [
+            { x: 120, y: 280, image: "1.jpg", sound: "audio1.wav", label: "MERのすごい人" },
+            { x: 280, y: 280, image: "2.jpg", sound: "audio2.wav", label: "アルマダさん<br>どうして…" },
+            { x: 460, y: 280, image: "3.jpg", sound: "audio3.wav", label: "パーフェクトな<br>あいづち" }
+        ];
+
+        let bgmPlaying = false;
+        let currentAudio = null;
+        const bgm = new Audio("bgm.mp3");
+        bgm.loop = true;
+        bgm.volume = 0.4;
+
+        // Startボタン
+        document.getElementById("startButton").addEventListener("click", function() {
+        document.getElementById("overlay").style.opacity = "0";
+        setTimeout(() => { document.getElementById("overlay").style.display = "none"; }, 1000);
+
+        // BGMを再生
+        bgm.play().catch(error => console.log("BGM再生エラー:", error));
+        bgm.currentTime = 5;
+        bgmPlaying = true;
+
+        // BGMボタンの制御
+        document.getElementById("playbgm").disabled = false; // BGM ON ボタンを有効化
+        document.getElementById("stopbgm").disabled = false;
+        });
+
+        
+        // BGM再生ボタン
+        document.getElementById("playbgm").addEventListener("click", function() {
+            if (!bgmPlaying) {
+                bgm.play();
+                bgm.currentTime = 5;
+                bgmPlaying = true;
+                this.disabled = true;  // BGM ON ボタンを無効化
+                document.getElementById("stopbgm").disabled = false;  // BGM OFF ボタンを有効化
+            }
+        });
+
+        // BGM停止ボタン
+        document.getElementById("stopbgm").addEventListener("click", function() {
+            if (bgmPlaying) {
+                bgm.pause();
+                bgm.currentTime = 0;
+                bgmPlaying = false;
+                this.disabled = true;  // BGM OFF ボタンを無効化
+                document.getElementById("playbgm").disabled = false;  // BGM ON ボタンを有効化
+            }
+        });
+
+        // デバッグ用エリアの自動生成
+        const container = document.getElementById("container");
+        clickAreas.forEach(area => {
+            let debugDiv = document.createElement("div");
+            debugDiv.className = "debug-area";
+            debugDiv.style.left = area.x + "px";
+            debugDiv.style.top = area.y + "px";
+            debugDiv.innerHTML = area.label;
+            container.appendChild(debugDiv);
+        });
+
+        // クリックで画像表示
+        document.addEventListener("click", function(event) {
+            var clickX = event.pageX;
+            var clickY = event.pageY;
+
+            clickAreas.forEach(area => {
+                if (clickX >= area.x && clickX <= area.x + 128 && clickY >= area.y && clickY <= area.y + 90) {
+                    if (currentAudio) {
+                        currentAudio.pause();
+                        currentAudio.currentTime = 0;
+                    }
+
+                    let block = document.createElement("div");
+                    block.className = "block";
+                    block.style.left = area.x + "px";
+                    block.style.top = area.y + "px";
+                    let img = document.createElement("img");
+                    img.src = area.image;
+                    block.appendChild(img);
+                    document.body.appendChild(block);
+                    block.style.display = "block";
+                    block.style.opacity = "1";
+
+                    currentAudio = new Audio(area.sound);
+                    currentAudio.play();
+
+                    //currentAudio.onended = function() {
+                    //    block.style.opacity = "0";
+                    //    setTimeout(() => { block.remove(); }, 500);
+                    //    currentAudio = null;
+                    //};
+                }
+            });
+        });
+
+        // すべての画像を表示
+        document.getElementById("showAllButton").addEventListener("click", function() {
+            clickAreas.forEach(area => {
+                let block = document.createElement("div");
+                block.className = "block";
+                block.style.left = area.x + "px";
+                block.style.top = area.y + "px";
+                let img = document.createElement("img");
+                img.src = area.image;
+                block.appendChild(img);
+                document.body.appendChild(block);
+                block.style.display = "block";
+                block.style.opacity = "1";
+            });
+        });
+
+        // 最初に戻る
+        document.getElementById("resetButton").addEventListener("click", function() {
+            location.reload();
+        });
+
+    </script>
+</body>
+</html>
