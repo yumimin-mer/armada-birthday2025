@@ -98,9 +98,9 @@
 
         /* ボタン共通 */
         .control-button {
-            padding: 10px 20px;
-            margin: 10px;
-            font-size: 16px;
+            padding: 8px 15px;
+            margin: 5px;
+            font-size: 12px;
             border: none;
             cursor: pointer;
             color: white;
@@ -122,6 +122,16 @@
         #overlay .title {
             font-size: 30px;
         }
+        .btnarea{
+            width:500px;
+            position:absolute;
+            top:100%;
+            left:0;right:0;
+        }
+        .mes{
+            margin:20px;
+            font-weight:bold;
+        }
     </style>
 </head>
 <body>
@@ -134,7 +144,8 @@
     </div>
 
     <div id="container">
-        <div>
+        <div class="mes">窓をクリックしてください</div>
+        <div class="btnarea">
             <button id="playbgm" class="control-button" disabled>BGM ON</button>
             <button id="stopbgm" class="control-button" disabled>BGM OFF</button>
             <button id="showAllButton" class="control-button">すべて表示</button>
@@ -144,9 +155,16 @@
 
     <script>
         const clickAreas = [
+            { x: 460, y: 170, image: "99.jpg", sound: "audio1.wav", label: "せーの！" },
             { x: 120, y: 280, image: "1.jpg", sound: "audio1.wav", label: "MERのすごい人" },
             { x: 280, y: 280, image: "2.jpg", sound: "audio2.wav", label: "アルマダさん<br>どうして…" },
-            { x: 460, y: 280, image: "3.jpg", sound: "audio3.wav", label: "パーフェクトな<br>あいづち" }
+            { x: 810, y: 170, image: "3.jpg", sound: "audio3.wav", label: "パーフェクトな<br>あいづち" },
+            { x: 640, y: 280, image: "4.jpg", sound: "audio3.wav", label: "〇〇" },
+            { x: 810, y: 280, image: "5.jpg", sound: "audio3.wav", label: "いつもこたつで<br>ねてます" },
+            { x: 810, y: 385, image: "6.jpg", sound: "audio3.wav", label: "△△" },
+            { x: 950, y: 280, image: "7.jpg", sound: "audio3.wav", label: "卍卍卍" },
+            { x: 950, y: 385, image: "8.jpg", sound: "audio3.wav", label: "△△" },
+            { x: 460, y: 280, image: "9.jpg", sound: "audio3.wav", label: "△△" }
         ];
 
         let bgmPlaying = false;
