@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Armada Happy Birthday 2025 By AAC</title>
     <style>
         body {
@@ -55,14 +55,14 @@
             background-color: #ffaa00;
         }
 
-        /* 背景 */
+        /* 背景をウィンドウサイズにフィット */
         #container {
             position: absolute;
             left: 0;
             top: 0;
-            width: 1792px;
-            height: 1024px;
-            background: url("image2.png") no-repeat;
+            width: 100vw;
+            height: 100vh;
+            background: url("image2.png") no-repeat center center/cover;
             opacity: 0;
             animation: fadeIn 3s ease-in-out forwards;
             text-align: center;
@@ -98,13 +98,17 @@
             background-color: rgb(0 0 0 / 0.5);
             color: #fff;
             font-weight: bold;
-            padding-top: 10px;
+            padding-top: 20px;
             text-align: center;
             cursor: pointer;
+            background-size: cover;   /* 要素全体にフィット */
+            background-position: center; /* 画像の中央部分を表示 */
+            background-repeat: no-repeat; /* 画像の繰り返しを防ぐ */
+            overflow: hidden; /* 画像のはみ出しを防ぐ */
             box-sizing:border-box;
         }
 
-        /* 動画レイヤー（最初はサイズ0px） */
+        /* 動画レイヤー（最初はサイズ0pxで非表示） */
         #video-layer {
             position: fixed;
             width: 0px;
@@ -115,16 +119,42 @@
             background-color: rgba(0, 0, 0, 0.9);
             z-index: 2000;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            transition: width 0.5s ease, height 0.5s ease;
+            transition: width 0.5s ease-in-out, height 0.5s ease-in-out, opacity 0.3s ease-in-out;
+            opacity: 0;
+        }
+
+        /* スマホの画面サイズに適応 */
+        #video-layer video {
+            width: 100%;
+            height: 100%;
+            max-width: 80vw;
+            max-height: 80vh;
+        }
+
+        /* 閉じるボタン */
+        #close-video {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: red;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 2100;
+            display: none;
         }
 
         #video-layer video {
             width: 100%;
             height: 100%;
         }
+
          /* ボタン共通 */
          .control-button {
             padding: 8px 15px;
@@ -150,17 +180,17 @@
     <!-- ページロード時の黒レイヤー -->
     <div id="overlay">
         <div class="title">アルマダさんとひとつ屋根の下のなかまたち</div>
-        <div>ウィンドウを最大化してください<br>このページは音楽が流れます<br>音量に気を付けてください</div>
+        <div>このページは音楽が流れます<br>音量に気を付けてください</div>
         <button id="startButton">どんな住人が出てくるかな～ ⇒ Start</button>
     </div>
 
     <!-- 背景コンテナ -->
     <div id="container">
-        <div class="mes">黒いまどをクリックしてください</div>
+        <div class="mes">チームアイコンをクリックしてください</div>
         <div class="btnarea">
             <button id="playbgm" class="control-button" disabled>BGM ON</button>
             <button id="stopbgm" class="control-button" disabled>BGM OFF</button>
-            <button id="showAllButton" class="control-button">すべて表示</button>
+<!--            <button id="showAllButton" class="control-button">すべて表示</button>-->
             <button id="resetButton" class="control-button">最初に戻る</button>
         </div>
 
@@ -169,16 +199,22 @@
 
     <!-- 動画レイヤー -->
     <div id="video-layer">
+        <button id="close-video">✖ 閉じる</button>
         <video id="video-player" controls></video>
     </div>
 
     <script>
         const clickAreas = [
-            { x: 448, y: 245, image: "9.jpg", video: "video1.mp4", label: "ろくが" },
+/*            { x: 448, y: 245, image: "9.jpg", video: "video1.mp4", label: "ろくが" },
             { x: 642, y: 257, image: "4.jpg", video: "video2.mp4", label: "ぱんだ" },
             { x: 850, y: 254, image: "2.jpg", video: "video3.mp4", label: "♡♡♡" },
             { x: 1049, y: 254, image: "7.jpg", video: "video4.mp4", label: "卍卍卍" },
-            { x: 1256, y: 245, image: "5.jpg", video: "video5.mp4", label: "こたつ" }
+            { x: 1256, y: 245, image: "5.jpg", video: "video5.mp4", label: "こたつ" }*/
+            { x: 650, y: 250, image: "9.jpg", video: "video1.mp4", label: "ろくが" },
+            { x: 650, y: 350, image: "4.jpg", video: "video2.mp4", label: "ぱんだ" },
+            { x: 650, y: 450, image: "2.jpg", video: "video3.mp4", label: "♡♡♡" },
+            { x: 650, y: 550, image: "7.jpg", video: "video4.mp4", label: "卍卍卍" },
+            { x: 650, y: 650, image: "5.jpg", video: "video5.mp4", label: "こたつ" }
         ];
 
 
@@ -230,45 +266,85 @@
 
     });
 
+    // 最初に戻るボタンの処理
+    document.getElementById("resetButton").addEventListener("click", function() {
+            resetPage();
+        });
 
+        // ページをリセットする関数
+        function resetPage() {
+            // BGMの停止
+            bgm.pause();
+                bgm.currentTime = 0;
 
+                // すべての画像ブロックを削除
+                document.querySelectorAll(".block").forEach(block => block.remove());
 
-        // デバッグエリアを作成
+                // 動画レイヤーを非表示
+                closeVideoLayer();
+
+                // デバッグエリアをリセット
+                updateDebugAreas();
+
+                // ページをリロード（完全リセット）
+                setTimeout(() => {
+                    location.reload(); // これで完全に最初の状態に戻る
+                }, 100);
+            }
+        // 元のデザインでの画面サイズ（基準となるサイズ）
+        const BASE_WIDTH = 1792; // 元の幅
+        const BASE_HEIGHT = 1024; // 元の高さ
+
+        // 現在のウィンドウサイズに応じて座標をスケーリングする関数
+        function scalePosition(x, y) {
+            let scaleX = window.innerWidth / BASE_WIDTH;
+            let scaleY = window.innerHeight / BASE_HEIGHT;
+            return {
+                x: x * scaleX,
+                y: y * scaleY
+            };
+        }
+
+        // デバッグエリアの位置を動的に調整し、画像を背景に設定
+        function updateDebugAreas() {
+            document.querySelectorAll(".debug-area").forEach((debugDiv, index) => {
+                let area = clickAreas[index];
+                let scaledPos = scalePosition(area.x, area.y);
+                debugDiv.style.left = `${scaledPos.x}px`;
+                debugDiv.style.top = `${scaledPos.y}px`;
+                debugDiv.style.backgroundImage = `url(${area.image})`; // 背景画像をセット
+            });
+        }
+
+        // 画面サイズが変更されたらデバッグエリアを再配置
+        window.addEventListener("resize", updateDebugAreas);
+
+        // デバッグエリアを作成（初回実行）
         clickAreas.forEach(area => {
             let debugDiv = document.createElement("div");
             debugDiv.className = "debug-area";
-            debugDiv.style.left = area.x + "px";
-            debugDiv.style.top = area.y + "px";
-            debugDiv.innerHTML = area.label;
+            let scaledPos = scalePosition(area.x, area.y);
+            debugDiv.style.left = `${scaledPos.x}px`;
+            debugDiv.style.top = `${scaledPos.y}px`;
+            debugDiv.style.backgroundImage = `url(${area.image})`; // 初期状態で背景画像をセット
             document.getElementById("container").appendChild(debugDiv);
         });
 
-        // クリックで画像＋動画再生
+        // 初回ロード時にデバッグエリアを配置
+        updateDebugAreas();
+
+        // クリックで動画再生
         document.addEventListener("click", function(event) {
             let debugArea = event.target.closest(".debug-area");
             if (debugArea) {
                 let index = Array.from(document.querySelectorAll(".debug-area")).indexOf(debugArea);
                 let area = clickAreas[index];
 
-                // 画像を表示
-                let block = document.querySelector(`.block[data-index="${index}"]`);
-                if (!block) {
-                    block = document.createElement("div");
-                    block.className = "block";
-                    block.dataset.index = index;
-                    block.style.left = area.x + "px";
-                    block.style.top = area.y + "px";
-
-                    let img = document.createElement("img");
-                    img.src = area.image;
-                    block.appendChild(img);
-                    document.body.appendChild(block);
-                }
-                block.style.display = "block";
-
-                // 動画レイヤーを拡大して表示
-                videoLayer.style.width = "1080px";
-                videoLayer.style.height = "1080px";
+                // 動画レイヤーを拡大＆表示
+                videoLayer.style.width = "80vw";
+                videoLayer.style.height = "80vh";
+                videoLayer.style.opacity = "1";
+                document.getElementById("close-video").style.display = "block"; // 閉じるボタン表示
 
                 // 他の動画を停止
                 currentVideo.pause();
@@ -278,13 +354,31 @@
                 currentVideo.src = area.video;
                 currentVideo.play();
 
-                // 動画が終了したらレイヤーを縮小（非表示）
+                // 動画が終了したらレイヤーを閉じる
                 currentVideo.onended = function() {
-                    videoLayer.style.width = "0px";
-                    videoLayer.style.height = "0px";
+                    closeVideoLayer();
                 };
             }
         });
+
+
+        // 閉じるボタンの処理
+        document.getElementById("close-video").addEventListener("click", function() {
+            closeVideoLayer();
+        });
+
+        // 動画レイヤーを閉じる関数
+        function closeVideoLayer() {
+            videoLayer.style.opacity = "0";
+            document.getElementById("close-video").style.display = "none"; // 閉じるボタン非表示
+            setTimeout(() => {
+                videoLayer.style.width = "0px";
+                videoLayer.style.height = "0px";
+                currentVideo.pause();
+                currentVideo.currentTime = 0;
+            }, 300);
+        }
+
         // すべての画像を表示
         document.getElementById("showAllButton").addEventListener("click", function() {
                 clickAreas.forEach(area => {
@@ -301,10 +395,7 @@
             });
         });
 
-        // 最初に戻る
-        document.getElementById("resetButton").addEventListener("click", function() {
-            location.reload();
-        });
+       
 
     </script>
 </body>
