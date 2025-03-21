@@ -291,54 +291,54 @@
                     location.reload(); // これで完全に最初の状態に戻る
                 }, 100);
             }
-        // 元のデザインでの画面サイズ（基準となるサイズ）
+       // 元のデザインでの画面サイズ（基準となるサイズ）
         const BASE_WIDTH = 1792; // 元の幅
         const BASE_HEIGHT = 1024; // 元の高さ
-        const BASE_DEBUG_WIDTH = 300; // 元のデバッグエリアの幅
-        const BASE_DEBUG_HEIGHT = 100; // 元のデバッグエリアの高さ
+        const BASE_DEBUG_WIDTH = 128; // 元のデバッグエリアの幅
+        const BASE_DEBUG_HEIGHT = 90; // 元のデバッグエリアの高さ
         
-        // 現在のウィンドウサイズに応じて座標とサイズをスケーリングする関数
-        function scalePositionAndSize(x, y, width, height) {
-            let scaleX = window.innerWidth / BASE_WIDTH;
-            let scaleY = window.innerHeight / BASE_HEIGHT;
+        // 現在のウィンドウサイズに応じて座標とサイズをスケーリングする関数（縦横比を保持）
+        function scalePositionAndSize(x, y) {
+            let scale = Math.min(window.innerWidth / BASE_WIDTH, window.innerHeight / BASE_HEIGHT); // 最小のスケール値を使用
             return {
-                x: (x * scaleX) + (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2),
-                y: (y * scaleY) + (window.innerHeight / 2) - (BASE_HEIGHT * scaleY / 2),
-                width: width * scaleX,
-                height: height * scaleY
+                x: (x * scale) + (window.innerWidth / 2) - (BASE_WIDTH * scale / 2),
+                y: (y * scale) + (window.innerHeight / 2) - (BASE_HEIGHT * scale / 2),
+                width: BASE_DEBUG_WIDTH * scale,
+                height: BASE_DEBUG_HEIGHT * scale
             };
         }
         
-        // デバッグエリアの位置とサイズを動的に調整（画面中央基準）
+        // デバッグエリアの位置とサイズを動的に調整（縦横比を保持）
         function updateDebugAreas() {
             document.querySelectorAll(".debug-area").forEach((debugDiv, index) => {
                 let area = clickAreas[index];
-                let scaled = scalePositionAndSize(area.x, area.y, BASE_DEBUG_WIDTH, BASE_DEBUG_HEIGHT);
+                let scaled = scalePositionAndSize(area.x, area.y);
                 debugDiv.style.left = `${scaled.x}px`;
                 debugDiv.style.top = `${scaled.y}px`;
                 debugDiv.style.width = `${scaled.width}px`;
                 debugDiv.style.height = `${scaled.height}px`;
+                });
+            }
+            
+            // 画面サイズが変更されたらデバッグエリアを再配置
+            window.addEventListener("resize", updateDebugAreas);
+            
+            // デバッグエリアを作成（初回実行）
+            clickAreas.forEach(area => {
+                let debugDiv = document.createElement("div");
+                debugDiv.className = "debug-area";
+                let scaled = scalePositionAndSize(area.x, area.y);
+                debugDiv.style.left = `${scaled.x}px`;
+                debugDiv.style.top = `${scaled.y}px`;
+                debugDiv.style.width = `${scaled.width}px`;
+                debugDiv.style.height = `${scaled.height}px`;
+                debugDiv.style.backgroundImage = `url(${area.image})`; // 背景画像を設定
+                document.getElementById("container").appendChild(debugDiv);
             });
-        }
-        
-        // 画面サイズが変更されたらデバッグエリアを再配置
-        window.addEventListener("resize", updateDebugAreas);
-        
-        // デバッグエリアを作成（初回実行）
-        clickAreas.forEach(area => {
-            let debugDiv = document.createElement("div");
-            debugDiv.className = "debug-area";
-            let scaled = scalePositionAndSize(area.x, area.y, BASE_DEBUG_WIDTH, BASE_DEBUG_HEIGHT);
-            debugDiv.style.left = `${scaled.x}px`;
-            debugDiv.style.top = `${scaled.y}px`;
-            debugDiv.style.width = `${scaled.width}px`;
-            debugDiv.style.height = `${scaled.height}px`;
-            debugDiv.style.backgroundImage = `url(${area.image})`; // 背景画像を設定
-            document.getElementById("container").appendChild(debugDiv);
-        });
-        
-        // 初回ロード時にデバッグエリアを配置
-        updateDebugAreas();
+            
+            // 初回ロード時にデバッグエリアを配置
+            updateDebugAreas();
+
 
         // クリックで動画再生
         document.addEventListener("click", function(event) {
