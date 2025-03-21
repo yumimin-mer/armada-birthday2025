@@ -294,46 +294,49 @@
         // 元のデザインでの画面サイズ（基準となるサイズ）
         const BASE_WIDTH = 1792; // 元の幅
         const BASE_HEIGHT = 1024; // 元の高さ
-
-        // 現在のウィンドウサイズに応じて座標をスケーリングする関数
-        function scalePosition(x, y) {
+        const BASE_DEBUG_WIDTH = 128; // 元のデバッグエリアの幅
+        const BASE_DEBUG_HEIGHT = 90; // 元のデバッグエリアの高さ
+        
+        // 現在のウィンドウサイズに応じて座標とサイズをスケーリングする関数
+        function scalePositionAndSize(x, y, width, height) {
             let scaleX = window.innerWidth / BASE_WIDTH;
             let scaleY = window.innerHeight / BASE_HEIGHT;
             return {
-                //x: x * scaleX,
-                //y: y * scaleY
                 x: (x * scaleX) + (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2),
                 y: (y * scaleY) + (window.innerHeight / 2) - (BASE_HEIGHT * scaleY / 2),
                 width: width * scaleX,
                 height: height * scaleY
             };
         }
-
-        // デバッグエリアの位置を動的に調整し、画像を背景に設定
+        
+        // デバッグエリアの位置とサイズを動的に調整（画面中央基準）
         function updateDebugAreas() {
             document.querySelectorAll(".debug-area").forEach((debugDiv, index) => {
                 let area = clickAreas[index];
-                let scaledPos = scalePosition(area.x, area.y);
-                debugDiv.style.left = `${scaledPos.x}px`;
-                debugDiv.style.top = `${scaledPos.y}px`;
-                debugDiv.style.backgroundImage = `url(${area.image})`; // 背景画像をセット
+                let scaled = scalePositionAndSize(area.x, area.y, BASE_DEBUG_WIDTH, BASE_DEBUG_HEIGHT);
+                debugDiv.style.left = `${scaled.x}px`;
+                debugDiv.style.top = `${scaled.y}px`;
+                debugDiv.style.width = `${scaled.width}px`;
+                debugDiv.style.height = `${scaled.height}px`;
             });
         }
-
+        
         // 画面サイズが変更されたらデバッグエリアを再配置
         window.addEventListener("resize", updateDebugAreas);
-
+        
         // デバッグエリアを作成（初回実行）
         clickAreas.forEach(area => {
             let debugDiv = document.createElement("div");
             debugDiv.className = "debug-area";
-            let scaledPos = scalePosition(area.x, area.y);
-            debugDiv.style.left = `${scaledPos.x}px`;
-            debugDiv.style.top = `${scaledPos.y}px`;
-            debugDiv.style.backgroundImage = `url(${area.image})`; // 初期状態で背景画像をセット
+            let scaled = scalePositionAndSize(area.x, area.y, BASE_DEBUG_WIDTH, BASE_DEBUG_HEIGHT);
+            debugDiv.style.left = `${scaled.x}px`;
+            debugDiv.style.top = `${scaled.y}px`;
+            debugDiv.style.width = `${scaled.width}px`;
+            debugDiv.style.height = `${scaled.height}px`;
+            debugDiv.style.backgroundImage = `url(${area.image})`; // 背景画像を設定
             document.getElementById("container").appendChild(debugDiv);
         });
-
+        
         // 初回ロード時にデバッグエリアを配置
         updateDebugAreas();
 
