@@ -300,8 +300,12 @@
             let scaleX = window.innerWidth / BASE_WIDTH;
             let scaleY = window.innerHeight / BASE_HEIGHT;
             return {
-                x: x * scaleX,
-                y: y * scaleY
+                //x: x * scaleX,
+                //y: y * scaleY
+                x: (x * scaleX) + (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2),
+                y: (y * scaleY) + (window.innerHeight / 2) - (BASE_HEIGHT * scaleY / 2),
+                width: width * scaleX,
+                height: height * scaleY
             };
         }
 
