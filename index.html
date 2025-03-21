@@ -299,8 +299,10 @@ const MIN_MARGIN = 20; // デバッグエリア間の最小余白
 function scalePosition(x, y) {
     let scaleX = window.innerWidth / BASE_WIDTH;
     let scaleY = window.innerHeight / BASE_HEIGHT;
-
-    let centeredX = (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2) + (x * scaleX) - 120*scaleX;
+    let centeredX = (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2) + (x * scaleX/2);
+    if(window.innerWidth > 480){
+        centeredX = (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2) + (x * scaleX);
+    }
     let centeredY = (window.innerHeight / 2) - (BASE_HEIGHT * scaleY / 2) + (y * scaleY);
 
     return {
