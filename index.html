@@ -328,7 +328,10 @@
         function scalePosition(x, y) {
         let scaleX = window.innerWidth / BASE_WIDTH;
         let scaleY = document.documentElement.clientHeight / BASE_HEIGHT;
-        let centeredX = (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2) + (x * scaleX);
+        let centeredX = (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2) + (x * scaleX/2);
+        if(window.innerWidth > 480){
+                centeredX = (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2) + (x * scaleX);
+        }
         let centeredY = (document.documentElement.clientHeight / 2) - (BASE_HEIGHT * scaleY / 2) + (y * scaleY);
     
         return { x: centeredX, y: centeredY };
