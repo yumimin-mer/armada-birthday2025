@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -61,12 +61,13 @@
             left: 0;
             top: 0;
             width: 100vw;
-            height: calc(100vh - 60px);
+            height: calc(var(--vh, 1vh) * 100 - 60px);
             background: url("image2.png") no-repeat center center/cover;
             opacity: 0;
             animation: fadeIn 3s ease-in-out forwards;
             text-align: center;
         }
+
 
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -215,7 +216,13 @@
         ];
 
 
-
+        // 実際の画面高さを取得し、CSS変数 `--vh` を更新
+        function updateVH() {
+            document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+        }
+        window.addEventListener('resize', updateVH);
+        updateVH(); // 初回実行
+        
         let currentVideo = document.getElementById("video-player");
         let videoLayer = document.getElementById("video-layer");
         let bgmPlaying = false;
@@ -326,19 +333,14 @@
         
         // 現在のウィンドウサイズに応じて座標をスケーリングする関数（中央基準で調整）
         function scalePosition(x, y) {
-            let scaleX = window.innerWidth / BASE_WIDTH;
-            let scaleY = window.innerHeight / BASE_HEIGHT;
-            let centeredX = (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2) + (x * scaleX/2);
-            if(window.innerWidth > 480){
-                centeredX = (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2) + (x * scaleX);
-            }
-            let centeredY = (window.innerHeight / 2) - (BASE_HEIGHT * scaleY / 2) + (y * scaleY);
-        
-            return {
-                x: centeredX,
-                y: centeredY
-            };
-        }
+        let scaleX = window.innerWidth / BASE_WIDTH;
+        let scaleY = document.documentElement.clientHeight / BASE_HEIGHT;
+        let centeredX = (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2) + (x * scaleX);
+        let centeredY = (document.documentElement.clientHeight / 2) - (BASE_HEIGHT * scaleY / 2) + (y * scaleY);
+    
+        return { x: centeredX, y: centeredY };
+    }
+
         
         // デバッグエリアの位置を動的に調整（バナーが重ならないようにする）
         function updateDebugAreas() {
