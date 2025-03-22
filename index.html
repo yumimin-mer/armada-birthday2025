@@ -305,24 +305,17 @@
 
         // ページをリセットする関数
         function resetPage() {
-            // BGMの停止
-            bgm.pause();
-                bgm.currentTime = 0;
+            stopBGM();
+            document.querySelectorAll(".block").forEach(block => block.remove());
+            closeVideoLayer();
+            updateDebugAreas();
+        
+            // 確実にページをリロードする
+            setTimeout(() => {
+                window.location.href = window.location.href;
+            }, 100);
+        }
 
-                // すべての画像ブロックを削除
-                document.querySelectorAll(".block").forEach(block => block.remove());
-
-                // 動画レイヤーを非表示
-                closeVideoLayer();
-
-                // デバッグエリアをリセット
-                updateDebugAreas();
-
-                // ページをリロード（完全リセット）
-                setTimeout(() => {
-                    location.reload(); // これで完全に最初の状態に戻る
-                }, 100);
-            }
        // 元のデザインでの画面サイズ（基準となるサイズ）
 
         const BASE_WIDTH = 1792; // 元の幅
