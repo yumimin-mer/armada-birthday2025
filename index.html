@@ -1,4 +1,4 @@
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -61,20 +61,19 @@
             left: 0;
             top: 0;
             width: 100vw;
-            height: calc(var(--vh, 1vh) * 100 - 60px);
+            height: calc(100vh - 60px);
             background: url("image2.png") no-repeat center center/cover;
             opacity: 0;
             animation: fadeIn 3s ease-in-out forwards;
             text-align: center;
         }
 
-
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
 
-        /* クリック時に表示するブロック（画像） */
+        /* バナー画像ブロック */
         .block {
             display: none;
             position: absolute;
@@ -90,20 +89,20 @@
             object-fit: cover;
         }
 
- /* デバッグエリア（バナーのサイズを固定 & クリップ表示） */
-.debug-area {
-    position: absolute;
-    pointer-events: all;
-    background-color: rgb(0 0 0 / 0.5);
-    color: #fff;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-    background-size: cover;   /* 要素全体にフィット */
-    background-position: center; /* 画像の中央部分を表示 */
-    background-repeat: no-repeat; /* 画像の繰り返しを防ぐ */
-    overflow: hidden; /* 画像のはみ出しを防ぐ */
-}
+        /* デバッグエリア（バナーのサイズを固定 & クリップ表示） */
+        .debug-area {
+            position: absolute;
+            pointer-events: all;
+            background-color: rgb(0 0 0 / 0.5);
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            background-size: cover;   /* 要素全体にフィット */
+            background-position: center; /* 画像の中央部分を表示 */
+            background-repeat: no-repeat; /* 画像の繰り返しを防ぐ */
+            overflow: hidden; /* 画像のはみ出しを防ぐ */
+        }
 
         /* 動画レイヤー（最初はサイズ0pxで非表示） */
         #video-layer {
@@ -128,8 +127,8 @@
         #video-layer video {
             width: 100%;
             height: 100%;
-            max-width: 80vw;
-            max-height: 80vh;
+            max-width: 95vw;
+            max-height: 95vh;
         }
 
         /* 閉じるボタン */
@@ -208,21 +207,15 @@
             { x: 850, y: 254, image: "2.jpg", video: "video3.mp4", label: "♡♡♡" },
             { x: 1049, y: 254, image: "7.jpg", video: "video4.mp4", label: "卍卍卍" },
             { x: 1256, y: 245, image: "5.jpg", video: "video5.mp4", label: "こたつ" }*/
-            { x: 700, y: 150, image: "banner4.png", video: "video1.mp4", label: "ろくが" },
-            { x: 700, y: 250, image: "banner1.png", video: "video2.mp4", label: "ぱんだ" },
-            { x: 700, y: 350, image: "banner2.png", video: "video3.mp4", label: "♡♡♡" },
-            { x: 700, y: 450, image: "banner3.png", video: "video4.mp4", label: "卍卍卍" },
-            { x: 700, y: 550, image: "banner5.png", video: "video5.mp4", label: "こたつ" }
+            { x: 700, y: 125, image: "banner4.png", video: "video1.mp4", label: "ろくが" },
+            { x: 700, y: 225, image: "banner1.png", video: "video2.mp4", label: "ぱんだ" },
+            { x: 700, y: 325, image: "banner2.png", video: "video3.mp4", label: "♡♡♡" },
+            { x: 700, y: 425, image: "banner3.png", video: "video4.mp4", label: "卍卍卍" },
+            { x: 700, y: 525, image: "banner5.png", video: "video5.mp4", label: "こたつ" }
         ];
 
 
-        // 実際の画面高さを取得し、CSS変数 `--vh` を更新
-        function updateVH() {
-            document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
-        }
-        window.addEventListener('resize', updateVH);
-        updateVH(); // 初回実行
-        
+
         let currentVideo = document.getElementById("video-player");
         let videoLayer = document.getElementById("video-layer");
         let bgmPlaying = false;
@@ -238,7 +231,7 @@
         // BGM停止
         function stopBGM() {
             bgm.pause();
-            bgm.currentTime = 0;
+            bgm.currentTime = 5;
         }
         
         // ページが非アクティブになったときに BGM を停止
@@ -305,61 +298,113 @@
 
         // ページをリセットする関数
         function resetPage() {
-            stopBGM();
-            document.querySelectorAll(".block").forEach(block => block.remove());
-            closeVideoLayer();
-            updateDebugAreas();
-        
-            // 確実にページをリロードする
-            setTimeout(() => {
-                window.location.href = window.location.href;
-            }, 100);
-        }
+            // BGMの停止
+            bgm.pause();
+                bgm.currentTime = 0;
 
-       // 元のデザインでの画面サイズ（基準となるサイズ）
+                // すべての画像ブロックを削除
+                document.querySelectorAll(".block").forEach(block => block.remove());
+
+                // 動画レイヤーを非表示
+                closeVideoLayer();
+
+                // デバッグエリアをリセット
+                updateDebugAreas();
+
+                // ページをリロード（完全リセット）
+                setTimeout(() => {
+                    location.reload(); // これで完全に最初の状態に戻る
+                }, 100);
+            }
+       
+        // 元のデザインでの画面サイズ（基準となるサイズ）
 
         const BASE_WIDTH = 1792; // 元の幅
         const BASE_HEIGHT = 1024; // 元の高さ
         const DEBUG_WIDTH = 240; // デバッグエリアの固定横幅
         const DEBUG_HEIGHT = 80; // デバッグエリアの固定縦幅
-        const MIN_MARGIN = 20; // デバッグエリア間の最小余白
+        const MIN_MARGIN = 10; // デバッグエリア間の最小余白
         
         // 現在のウィンドウサイズに応じて座標をスケーリングする関数（中央基準で調整）
         function scalePosition(x, y) {
         let scaleX = window.innerWidth / BASE_WIDTH;
-        let scaleY = document.documentElement.clientHeight / BASE_HEIGHT;
-        let centeredX = (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2) + (x * scaleX/2);
-        if(window.innerWidth > 480){
-                centeredX = (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2) + (x * scaleX);
-        }
-        let centeredY = (document.documentElement.clientHeight / 2) - (BASE_HEIGHT * scaleY / 2) + (y * scaleY);
-    
+        let scaleY = window.innerHeight / BASE_HEIGHT;
+        
+        // 画面の中央に配置
+        let centeredX = (window.innerWidth / 2) - (DEBUG_WIDTH / 2);
+        let centeredY = (window.innerHeight / 2) - (BASE_HEIGHT * scaleY / 2) + (y * scaleY);
+
         return { x: centeredX, y: centeredY };
     }
 
         
-        // デバッグエリアの位置を動的に調整（バナーが重ならないようにする）
-        function updateDebugAreas() {
-            let lastY = 0; // 前回のY座標
-            document.querySelectorAll(".debug-area").forEach((debugDiv, index) => {
-                let area = clickAreas[index];
-                let scaledPos = scalePosition(area.x, area.y);
-        
-                // 余白を確保しながら配置
-                if (index > 0 && scaledPos.y - lastY < DEBUG_HEIGHT + MIN_MARGIN) {
-                    scaledPos.y = lastY + DEBUG_HEIGHT + MIN_MARGIN; // 余白を確保
-                }
-                lastY = scaledPos.y; // 次のエリアのために更新
-        
-                debugDiv.style.left = `${scaledPos.x}px`;
-                debugDiv.style.top = `${scaledPos.y}px`;
-                debugDiv.style.width = `${DEBUG_WIDTH}px`;
-                debugDiv.style.height = `${DEBUG_HEIGHT}px`;
-            });
+// デバイスのアスペクト比を取得
+function getAspectRatio() {
+    return window.innerWidth / window.innerHeight;
+}
+
+// LINEアプリ内ブラウザを判定
+function isLineApp() {
+    return /Line/i.test(navigator.userAgent);
+}
+
+// LINEツールバーの高さを考慮して `minMargin` を取得
+function getMinMargin() {
+    let aspectRatio = window.innerWidth / window.innerHeight;
+    let baseMargin = document.documentElement.clientHeight * 0.03; // デフォルトの `minMargin`
+    
+    let toolbarHeight = isLineApp() ? 60 : 0; // LINEならツールバー高さを考慮
+    
+    if (aspectRatio < 0.5625) {
+        return baseMargin * 1.2 + toolbarHeight * 0.5; // 縦長デバイスでは `minMargin` を増やす
+    }
+    return baseMargin + toolbarHeight * 0.5;
+}
+
+// `DEBUG_HEIGHT` もLINEツールバーを考慮して調整
+function getDebugHeight() {
+    let aspectRatio = window.innerWidth / window.innerHeight;
+    let baseHeight = 80; // デフォルトのデバッグエリアの高さ
+    let toolbarHeight = isLineApp() ? 60 : 0;
+    
+    if (aspectRatio < 0.5625) {
+        return baseHeight * 0.9 - toolbarHeight * 0.3; // 縦長デバイスなら `DEBUG_HEIGHT` を縮小
+    }
+    return baseHeight - toolbarHeight * 0.3;
+}
+
+// デバッグエリアの位置を動的に調整
+function updateDebugAreas() {
+    let minMargin = getMinMargin();
+    let debugHeight = getDebugHeight();
+    let lastY = 0;
+
+    document.querySelectorAll(".debug-area").forEach((debugDiv, index) => {
+        let area = clickAreas[index];
+        let scaledPos = scalePosition(area.x, area.y);
+
+        // `DEBUG_HEIGHT` を変更
+        debugDiv.style.height = `${debugHeight}px`;
+
+        // 余白を確保しながら配置（バナーのかぶりを防ぐ）
+        if (index > 0 && scaledPos.y - lastY < debugHeight + minMargin) {
+            scaledPos.y = lastY + debugHeight + minMargin;
         }
-        
-        // 画面サイズが変更されたらデバッグエリアを再配置
-        window.addEventListener("resize", updateDebugAreas);
+        lastY = scaledPos.y;
+
+        debugDiv.style.left = `${scaledPos.x}px`;
+        debugDiv.style.top = `${scaledPos.y}px`;
+        debugDiv.style.width = `${DEBUG_WIDTH}px`;
+    });
+}
+
+// 画面リサイズ時に `minMargin` と `DEBUG_HEIGHT` を再計算
+window.addEventListener("resize", updateDebugAreas);
+
+// 初回ロード時にデバッグエリアを配置
+updateDebugAreas();
+
+
         
         // デバッグエリアを作成（初回実行）
         clickAreas.forEach(area => {
@@ -374,9 +419,6 @@
             document.getElementById("container").appendChild(debugDiv);
         });
         
-        // 初回ロード時にデバッグエリアを配置
-        updateDebugAreas();
-
 
 
 
