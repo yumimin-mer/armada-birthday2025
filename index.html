@@ -62,7 +62,6 @@
             min-height: 60px;
             text-align: center;
             padding: 10px;
-            padding-bottom:60px;
 
             background: rgba(0, 0, 0, 0.7);
             position: relative;
@@ -82,7 +81,7 @@
         /* デバッグエリア */
         #waku {
             width: 300px;
-            height: 100%;
+            height: calc(100vh - 130px);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -103,11 +102,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-shrink:1;
         }
         .debug-area img {
             max-width: 100%;
-            max-height: 100%;
+            width:250px;
             object-fit: contain;
+            
         }
 
         /* 動画レイヤー */
@@ -236,18 +237,18 @@
             closeVideoLayer();
         });
 
-        // 動画レイヤーを閉じる関数
-        function closeVideoLayer() {
-            videoLayer.style.opacity = "0"; // フェードアウト
-
+       // 動画レイヤーを閉じる関数
+       function closeVideoLayer() {
+            videoLayer.style.opacity = "0";
+            document.getElementById("close-video").style.display = "none"; // 閉じるボタン非表示
             setTimeout(() => {
-                videoLayer.style.display = "none"; // 完全に非表示
                 videoLayer.style.width = "0px";
                 videoLayer.style.height = "0px";
-                videoPlayer.pause();
-                videoPlayer.currentTime = 0;
-            }, 300); // 300ms 後に `display: none;` を適用
+                currentVideo.pause();
+                currentVideo.currentTime = 0;
+            }, 300);
         }
+
 
         
         // ページが非アクティブになったときに BGM を停止
