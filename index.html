@@ -368,7 +368,7 @@ function getDebugHeight() {
     let toolbarHeight = isLineApp() ? 60 : 0;
     
     if (aspectRatio < 0.5625) {
-        return baseHeight * 0.9 - toolbarHeight * 0.3; // 縦長デバイスなら `DEBUG_HEIGHT` を縮小
+        return baseHeight * 1 - toolbarHeight * 0.3; // 縦長デバイスなら `DEBUG_HEIGHT` を縮小
     }
     return baseHeight - toolbarHeight * 0.3;
 }
