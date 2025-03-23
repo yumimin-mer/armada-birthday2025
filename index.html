@@ -1,13 +1,17 @@
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Armada Happy Birthday 2025 By AAC　</title>
+    <title>Armada Happy Birthday 2025 By AAC</title>
     <style>
         body {
             margin: 0;
             background-color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         /* ページロード時の黒レイヤー */
@@ -32,16 +36,6 @@
         #overlay .title {
             font-size: 30px;
         }
-        .btnarea{
-            width:100vw;
-            position:absolute;
-            top:100%;
-            left:0;right:0;
-        }
-        .mes{
-            margin:20px;
-            font-weight:bold;
-        }
         #startButton {
             padding: 15px 30px;
             font-size: 24px;
@@ -51,88 +45,109 @@
             font-weight: bold;
         }
 
-        #startButton:hover {
-            background-color: #ffaa00;
-        }
-
-        /* 背景をウィンドウサイズにフィット */
+        /* 背景 */
         #container {
-            position: absolute;
-            left: 0;
-            top: 0;
             width: 100vw;
-            height: calc(var(--vh, 1vh) * 100 - 60px);
+            height: calc(100vh - 130px);
             background: url("image2.png") no-repeat center center/cover;
-            opacity: 0;
-            animation: fadeIn 3s ease-in-out forwards;
             text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
+        /* ボタンエリアを #container の外側に配置 */
+        .btnarea {
+            width: 100vw;
+            min-height: 60px;
+            text-align: center;
+            padding: 10px;
+            padding-bottom:60px;
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            background: rgba(0, 0, 0, 0.7);
+            position: relative;
         }
-
-        /* クリック時に表示するブロック（画像） */
-        .block {
-            display: none;
-            position: absolute;
-            width: 180px;
-            height: 60px;
-            background-color: rgba(0, 0, 0, 0.7);
-            opacity: 1;
+        .control-button {
+            padding: 8px 15px;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            margin: 5px;
         }
+        #playbgm { background-color: green; }
+        #stopbgm { background-color: red; }
+        #resetButton { background-color: gray; }
 
-        .block img {
-            width: 100%;
+        /* デバッグエリア */
+        #waku {
+            width: 300px;
             height: 100%;
-            object-fit: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .mes {
+            font-weight: bold;
+            color: #000;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .debug-area {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .debug-area img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
 
- /* デバッグエリア（バナーのサイズを固定 & クリップ表示） */
-.debug-area {
-    position: absolute;
-    pointer-events: all;
-    background-color: rgb(0 0 0 / 0.5);
-    color: #fff;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-    background-size: cover;   /* 要素全体にフィット */
-    background-position: center; /* 画像の中央部分を表示 */
-    background-repeat: no-repeat; /* 画像の繰り返しを防ぐ */
-    overflow: hidden; /* 画像のはみ出しを防ぐ */
-}
-
-        /* 動画レイヤー（最初はサイズ0pxで非表示） */
+        /* 動画レイヤー */
         #video-layer {
             position: fixed;
-            width: 0px;
-            height: 0px;
+            width: 0;
+            height: 0;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.9);
             z-index: 2000;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            transition: width 0.5s ease-in-out, height 0.5s ease-in-out, opacity 0.3s ease-in-out;
+            transition: width 0.5s, height 0.5s, opacity 0.3s;
             opacity: 0;
         }
-
-        /* スマホの画面サイズに適応 */
+              /* 動画レイヤー */
+              #video-layer {
+            position: fixed;
+            width: 0;
+            height: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            display: none; /* 最初は非表示 */
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
         #video-layer video {
             width: 100%;
             height: 100%;
-            max-width: 80vw;
-            max-height: 80vh;
+            max-width: 95vw;
+            max-height: 95vh;
         }
-
-        /* 閉じるボタン */
         #close-video {
             position: absolute;
             top: 10px;
@@ -140,36 +155,11 @@
             background: red;
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 10px;
             font-size: 16px;
             cursor: pointer;
-            z-index: 2100;
             display: none;
         }
-
-        #video-layer video {
-            width: 100%;
-            height: 100%;
-        }
-
-         /* ボタン共通 */
-         .control-button {
-            padding: 8px 15px;
-            margin: 5px;
-            font-size: 12px;
-            border: none;
-            cursor: pointer;
-            color: white;
-        }
-        #playbgm { background-color: green; }
-        #playbgm:hover { background-color: darkgreen; }
-        #stopbgm { background-color: red; }
-        #stopbgm:hover { background-color: darkred; }
-        #showAllButton { background-color: blue; }
-        #showAllButton:hover { background-color: darkblue; }
-        #resetButton { background-color: gray; }
-        #resetButton:hover { background-color: darkgray; }
-
     </style>
 </head>
 <body>
@@ -181,49 +171,34 @@
         <button id="startButton">⇒ Start</button>
     </div>
 
+
     <!-- 背景コンテナ -->
     <div id="container">
-        <div class="mes">みんなからのメッセージ</div>
-        <div class="btnarea">
-            <button id="playbgm" class="control-button" disabled>BGM ON</button>
-            <button id="stopbgm" class="control-button" disabled>BGM OFF</button>
-<!--            <button id="showAllButton" class="control-button">すべて表示</button>-->
-            <button id="resetButton" class="control-button">最初に戻る</button>
+        <div id="waku">
+            <div class="mes">みんなからのメッセージ</div>
+            <div class="debug-area"><img src="banner4.png" data-video="video1.mp4"></div>
+            <div class="debug-area"><img src="banner1.png" data-video="video2.mp4"></div>
+            <div class="debug-area"><img src="banner2.png" data-video="video3.mp4"></div>
+            <div class="debug-area"><img src="banner3.png" data-video="video4.mp4"></div>
+            <div class="debug-area"><img src="banner5.png" data-video="video5.mp4"></div>
         </div>
+    </div>
 
-
+    <!-- ボタンエリア (containerの外側) -->
+    <div class="btnarea">
+        <button id="playbgm" class="control-button">BGM ON</button>
+        <button id="stopbgm" class="control-button">BGM OFF</button>
+        <button id="resetButton" class="control-button">最初に戻る</button>
     </div>
 
     <!-- 動画レイヤー -->
     <div id="video-layer">
-        <button id="close-video">✖ 閉じる</button>
         <video id="video-player" controls playsinline></video>
-
+        <button id="close-video">✖ 閉じる</button>
     </div>
 
     <script>
-        const clickAreas = [
-/*            { x: 448, y: 245, image: "9.jpg", video: "video1.mp4", label: "ろくが" },
-            { x: 642, y: 257, image: "4.jpg", video: "video2.mp4", label: "ぱんだ" },
-            { x: 850, y: 254, image: "2.jpg", video: "video3.mp4", label: "♡♡♡" },
-            { x: 1049, y: 254, image: "7.jpg", video: "video4.mp4", label: "卍卍卍" },
-            { x: 1256, y: 245, image: "5.jpg", video: "video5.mp4", label: "こたつ" }*/
-            { x: 700, y: 150, image: "banner4.png", video: "video1.mp4", label: "ろくが" },
-            { x: 700, y: 250, image: "banner1.png", video: "video2.mp4", label: "ぱんだ" },
-            { x: 700, y: 350, image: "banner2.png", video: "video3.mp4", label: "♡♡♡" },
-            { x: 700, y: 450, image: "banner3.png", video: "video4.mp4", label: "卍卍卍" },
-            { x: 700, y: 550, image: "banner5.png", video: "video5.mp4", label: "こたつ" }
-        ];
-
-
-        // 実際の画面高さを取得し、CSS変数 `--vh` を更新
-        function updateVH() {
-            document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
-        }
-        window.addEventListener('resize', updateVH);
-        updateVH(); // 初回実行
-        
-        let currentVideo = document.getElementById("video-player");
+        let videoPlayer = document.getElementById("video-player");
         let videoLayer = document.getElementById("video-layer");
         let bgmPlaying = false;
         let currentAudio = null;
@@ -238,8 +213,42 @@
         // BGM停止
         function stopBGM() {
             bgm.pause();
-            bgm.currentTime = 0;
+            bgm.currentTime = 5;
         }
+         // 動画レイヤーを開く
+         document.querySelectorAll(".debug-area img").forEach(img => {
+            img.addEventListener("click", function() {
+                videoLayer.style.display = "flex"; // 表示
+                videoLayer.style.width = "80vw";
+                videoLayer.style.height = "80vh";
+                videoLayer.style.opacity = "1";
+                document.getElementById("close-video").style.display = "block";
+                videoPlayer.src = this.dataset.video;
+                videoPlayer.play();
+                // 動画が終了したらレイヤーを閉じる
+                videoPlayer.onended = function() {
+                    closeVideoLayer();
+                };
+            });
+        });
+        // 閉じるボタンの処理
+        document.getElementById("close-video").addEventListener("click", function() {
+            closeVideoLayer();
+        });
+
+        // 動画レイヤーを閉じる関数
+        function closeVideoLayer() {
+            videoLayer.style.opacity = "0"; // フェードアウト
+
+            setTimeout(() => {
+                videoLayer.style.display = "none"; // 完全に非表示
+                videoLayer.style.width = "0px";
+                videoLayer.style.height = "0px";
+                videoPlayer.pause();
+                videoPlayer.currentTime = 0;
+            }, 300); // 300ms 後に `display: none;` を適用
+        }
+
         
         // ページが非アクティブになったときに BGM を停止
         document.addEventListener("visibilitychange", function () {
@@ -297,153 +306,8 @@
         });
 
     });
-
-    // 最初に戻るボタンの処理
-    document.getElementById("resetButton").addEventListener("click", function() {
-            resetPage();
-        });
-
-        // ページをリセットする関数
-        function resetPage() {
-            stopBGM();
-            document.querySelectorAll(".block").forEach(block => block.remove());
-            closeVideoLayer();
-            updateDebugAreas();
-        
-            // 確実にページをリロードする
-            setTimeout(() => {
-                window.location.href = window.location.href;
-            }, 100);
-        }
-
-       // 元のデザインでの画面サイズ（基準となるサイズ）
-
-        const BASE_WIDTH = 1792; // 元の幅
-        const BASE_HEIGHT = 1024; // 元の高さ
-        const DEBUG_WIDTH = 240; // デバッグエリアの固定横幅
-        const DEBUG_HEIGHT = 80; // デバッグエリアの固定縦幅
-        const MIN_MARGIN = 20; // デバッグエリア間の最小余白
-        
-        // 現在のウィンドウサイズに応じて座標をスケーリングする関数（中央基準で調整）
-        function scalePosition(x, y) {
-        let scaleX = window.innerWidth / BASE_WIDTH;
-        let scaleY = document.documentElement.clientHeight / BASE_HEIGHT;
-        let centeredX = (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2) + (x * scaleX/2);
-        if(window.innerWidth > 480){
-                centeredX = (window.innerWidth / 2) - (BASE_WIDTH * scaleX / 2) + (x * scaleX);
-        }
-        let centeredY = (document.documentElement.clientHeight / 2) - (BASE_HEIGHT * scaleY / 2) + (y * scaleY);
-    
-        return { x: centeredX, y: centeredY };
-    }
-
-        
-        // デバッグエリアの位置を動的に調整（バナーが重ならないようにする）
-        function updateDebugAreas() {
-            let lastY = 0; // 前回のY座標
-            document.querySelectorAll(".debug-area").forEach((debugDiv, index) => {
-                let area = clickAreas[index];
-                let scaledPos = scalePosition(area.x, area.y);
-        
-                // 余白を確保しながら配置
-                if (index > 0 && scaledPos.y - lastY < DEBUG_HEIGHT + MIN_MARGIN) {
-                    scaledPos.y = lastY + DEBUG_HEIGHT + MIN_MARGIN; // 余白を確保
-                }
-                lastY = scaledPos.y; // 次のエリアのために更新
-        
-                debugDiv.style.left = `${scaledPos.x}px`;
-                debugDiv.style.top = `${scaledPos.y}px`;
-                debugDiv.style.width = `${DEBUG_WIDTH}px`;
-                debugDiv.style.height = `${DEBUG_HEIGHT}px`;
-            });
-        }
-        
-        // 画面サイズが変更されたらデバッグエリアを再配置
-        window.addEventListener("resize", updateDebugAreas);
-        
-        // デバッグエリアを作成（初回実行）
-        clickAreas.forEach(area => {
-            let debugDiv = document.createElement("div");
-            debugDiv.className = "debug-area";
-            let scaledPos = scalePosition(area.x, area.y);
-            debugDiv.style.left = `${scaledPos.x}px`;
-            debugDiv.style.top = `${scaledPos.y}px`;
-            debugDiv.style.width = `${DEBUG_WIDTH}px`;
-            debugDiv.style.height = `${DEBUG_HEIGHT}px`;
-            debugDiv.style.backgroundImage = `url(${area.image})`; // 背景画像を設定
-            document.getElementById("container").appendChild(debugDiv);
-        });
-        
-        // 初回ロード時にデバッグエリアを配置
-        updateDebugAreas();
-
-
-
-
-        // クリックで動画再生
-        document.addEventListener("click", function(event) {
-            let debugArea = event.target.closest(".debug-area");
-            if (debugArea) {
-                let index = Array.from(document.querySelectorAll(".debug-area")).indexOf(debugArea);
-                let area = clickAreas[index];
-
-                // 動画レイヤーを拡大＆表示
-                videoLayer.style.width = "80vw";
-                videoLayer.style.height = "80vh";
-                videoLayer.style.opacity = "1";
-                document.getElementById("close-video").style.display = "block"; // 閉じるボタン表示
-
-                // 他の動画を停止
-                currentVideo.pause();
-                currentVideo.currentTime = 0;
-
-                // 新しい動画をセット & 再生
-                currentVideo.src = area.video;
-                currentVideo.play();
-
-                // 動画が終了したらレイヤーを閉じる
-                currentVideo.onended = function() {
-                    closeVideoLayer();
-                };
-            }
-        });
-
-
-        // 閉じるボタンの処理
-        document.getElementById("close-video").addEventListener("click", function() {
-            closeVideoLayer();
-        });
-
-        // 動画レイヤーを閉じる関数
-        function closeVideoLayer() {
-            videoLayer.style.opacity = "0";
-            document.getElementById("close-video").style.display = "none"; // 閉じるボタン非表示
-            setTimeout(() => {
-                videoLayer.style.width = "0px";
-                videoLayer.style.height = "0px";
-                currentVideo.pause();
-                currentVideo.currentTime = 0;
-            }, 300);
-        }
-
-        // すべての画像を表示
-        document.getElementById("showAllButton").addEventListener("click", function() {
-                clickAreas.forEach(area => {
-                let block = document.createElement("div");
-                block.className = "block";
-                block.style.left = area.x + "px";
-                block.style.top = area.y + "px";
-                let img = document.createElement("img");
-                img.src = area.image;
-                block.appendChild(img);
-                document.body.appendChild(block);
-                block.style.display = "block";
-                block.style.opacity = "1";
-            });
-        });
-
+    document.getElementById("resetButton").addEventListener("click", () => location.reload());
        
-
-    </script>
+</script>
 </body>
 </html>
