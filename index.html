@@ -401,6 +401,13 @@ function updateDebugAreas() {
 // 画面リサイズ時に `minMargin` と `DEBUG_HEIGHT` を再計算
 window.addEventListener("resize", updateDebugAreas);
 
+// 初回ロード時にも `resize` イベントを強制発生
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        window.dispatchEvent(new Event("resize"));
+    }, 100); // 100ms 遅延して実行
+});
+
 // 初回ロード時にデバッグエリアを配置
 updateDebugAreas();
 
